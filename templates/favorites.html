@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}My Favorites – RecipeFinder{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">❤️ My Favorites</h2>
+    <span class="badge bg-secondary">{{ favorites|length }} saved</span>
+  </div>
+
+  {% if favorites %}
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+      {% for recipe in favorites %}
+      <div class="col">
+        <div class="card h-100">
+          {% if recipe.thumbnail_url %}
+            <img src="{{ recipe.thumbnail_url }}/preview" class="card-img-top" alt="{{ recipe.name }}" />
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title fw-bold">{{ recipe.name }}</h6>
+            {% if recipe.category %}
+              <span class="badge badge-category mb-2" style="width:fit-content">{{ recipe.category }}</span>
+            {% endif %}
+            <a href="{{ url_for('recipe_detail', meal_id=recipe.id) }}"
+               class="btn btn-primary btn-sm">View</a>
+            <form action="{{ url_for('favorites_remove', meal_id=recipe.id) }}" method="POST" class="mt-2">
+              <button type="submit" class="btn btn-outline-danger btn-sm w-100"
+                      onclick="return confirm('Remove from favorites?')">🗑 Remove</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center py-5">
+      <div style="font-size:3rem">❤️</div>
+      <h5 class="mt-3">No favorites saved yet!</h5>
+      <p class="text-muted">Search for recipes and hit "Save to Favorites" to see them here.</p>
+      <a href="{{ url_for('index') }}" class="btn btn-primary">Find Recipes</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

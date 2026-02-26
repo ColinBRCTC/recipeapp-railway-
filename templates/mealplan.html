@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Weekly Meal Plan – RecipeFinder{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h2 class="fw-bold">📅 Weekly Meal Plan</h2>
+    <form action="{{ url_for('meal_plan_clear') }}" method="POST"
+          onsubmit="return confirm('Clear the entire meal plan?')">
+      <button type="submit" class="btn btn-outline-danger btn-sm">🗑 Clear All</button>
+    </form>
+  </div>
+
+  {% if not favorites %}
+    <div class="alert alert-info">
+      Save some favorites first, then you can assign them to days here!
+      <a href="{{ url_for('index') }}" class="btn btn-sm btn-primary ms-2">Find Recipes</a>
+    </div>
+  {% endif %}
+
+  <div class="row g-3">
+    {% for day in ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] %}
+      {% set assigned = plan.plan.get(day) %}
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 p-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold mb-0">{{ day }}</h6>
+            {% if assigned %}
+              <form action="{{ url_for('meal_plan_remove', day_name=day) }}" method="POST">
+                <button type="submit" class="btn btn-outline-danger btn-sm py-0 px-2">✕</button>
+              </form>
+            {% endif %}
+          </div>
+
+          {% if assigned %}
+            <!-- Day already has a meal -->
+            <a href="{{ url_for('recipe_detail', meal_id=assigned.id) }}" class="text-decoration-none">
+              {% if assigned.thumbnail_url %}
+                <img src="{{ assigned.thumbnail_url }}/preview" class="img-fluid rounded-2 mb-2"
+                     style="height:120px;width:100%;object-fit:cover" alt="{{ assigned.name }}" />
+              {% endif %}
+              <span class="fw-semibold text-dark">{{ assigned.name }}</span>
+            </a>
+          {% else %}
+            <!-- Empty day – show assignment form -->
+            <p class="text-muted small mb-2">No meal assigned</p>
+            {% if favorites %}
+              <form action="{{ url_for('meal_plan_assign') }}" method="POST" class="d-flex gap-1 mt-auto">
+                <input type="hidden" name="day" value="{{ day }}" />
+                <select name="meal_id" class="form-select form-select-sm">
+                  {% for fav in favorites %}
+                    <option value="{{ fav.id }}">{{ fav.name }}</option>
+                  {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm">Add</button>
+              </form>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

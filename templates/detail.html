@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ recipe.name }} – RecipeFinder{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm mb-3">← Back</a>
+
+  <div class="row g-4">
+    <!-- Left: image + meta -->
+    <div class="col-md-4">
+      {% if recipe.thumbnail_url %}
+        <img src="{{ recipe.thumbnail_url }}" class="img-fluid rounded-3 shadow-sm w-100" alt="{{ recipe.name }}" />
+      {% endif %}
+      <div class="card mt-3 p-3">
+        <p class="mb-1"><strong>Category:</strong> {{ recipe.category or '–' }}</p>
+        <p class="mb-1"><strong>Cuisine:</strong> {{ recipe.area or '–' }}</p>
+        {% if recipe.youtube_url %}
+          <a href="{{ recipe.youtube_url }}" target="_blank" class="btn btn-sm btn-danger mt-2">▶ Watch on YouTube</a>
+        {% endif %}
+      </div>
+
+      <!-- Action buttons -->
+      <div class="d-grid gap-2 mt-3">
+        {% if not is_favorite %}
+          <form action="{{ url_for('favorites_add') }}" method="POST">
+            <input type="hidden" name="meal_id" value="{{ recipe.id }}" />
+            <button type="submit" class="btn btn-primary w-100">❤️ Save to Favorites</button>
+          </form>
+        {% else %}
+          <button class="btn btn-outline-secondary w-100" disabled>✅ Already in Favorites</button>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Right: details -->
+    <div class="col-md-8">
+      <h1 class="fw-bold">{{ recipe.name }}</h1>
+
+      <!-- Ingredients -->
+      <h5 class="fw-semibold mt-4 mb-2">🧂 Ingredients</h5>
+      {% if recipe.ingredients %}
+        <ul class="list-group list-group-flush mb-4">
+          {% for ingredient in recipe.ingredients %}
+            <li class="list-group-item ps-0">{{ ingredient }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">No ingredient data available.</p>
+      {% endif %}
+
+      <!-- Instructions -->
+      <h5 class="fw-semibold mb-2">📋 Instructions</h5>
+      {% if recipe.get_instructions_steps() %}
+        {% for step in recipe.get_instructions_steps() %}
+          <p>{{ step }}</p>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted">No instructions available.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

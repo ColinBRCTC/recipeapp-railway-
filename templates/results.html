@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Search Results – RecipeFinder{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <!-- Search bar stays visible on results page -->
+  <form action="{{ url_for('search') }}" method="GET" class="d-flex gap-2 mb-4">
+    <input type="text" name="q" value="{{ query }}" class="form-control"
+           placeholder="Search recipes..." />
+    <button type="submit" class="btn btn-primary">🔍</button>
+    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Clear</a>
+  </form>
+
+  {% if message %}
+    <div class="alert alert-warning">{{ message }}</div>
+  {% endif %}
+
+  {% if recipes %}
+    <p class="text-muted mb-3">Found <strong>{{ recipes|length }}</strong> recipe{{ 's' if recipes|length != 1 }}</p>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+      {% for recipe in recipes %}
+      <div class="col">
+        <div class="card h-100">
+          {% if recipe.thumbnail_url %}
+            <img src="{{ recipe.thumbnail_url }}/preview" class="card-img-top" alt="{{ recipe.name }}" />
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title fw-bold">{{ recipe.name }}</h6>
+            {% if recipe.category %}
+              <span class="badge badge-category mb-2" style="width:fit-content">{{ recipe.category }}</span>
+            {% endif %}
+            <a href="{{ url_for('recipe_detail', meal_id=recipe.id) }}"
+               class="btn btn-primary btn-sm mt-auto">View Recipe</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% elif not message %}
+    <p class="text-muted">No results to display.</p>
+  {% endif %}
+</div>
+{% endblock %}

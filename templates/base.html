@@ -4,23 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Recipe Finder{% endblock %}</title>
-  <!-- Bootstrap 5 CDN (free, no account needed) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
   <style>
-    :root {
-      --primary: #E8472B;
-      --secondary: #2B3A67;
-      --bg-light: #FFF8F5;
-    }
+    :root { --primary: #E8472B; --secondary: #2B3A67; --bg-light: #FFF8F5; }
     body { background-color: var(--bg-light); font-family: 'Segoe UI', sans-serif; }
     .navbar { background-color: var(--secondary) !important; }
     .navbar-brand, .nav-link { color: #fff !important; }
     .navbar-brand { font-size: 1.4rem; font-weight: 700; }
     .nav-link:hover { color: #F5C842 !important; }
-    .search-hero {
-      background: linear-gradient(135deg, var(--secondary) 0%, #1a2540 100%);
-      color: white; padding: 3rem 1rem;
-    }
     .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); transition: transform .2s; }
     .card:hover { transform: translateY(-4px); }
     .card-img-top { height: 180px; object-fit: cover; border-radius: 12px 12px 0 0; }
@@ -29,11 +20,11 @@
     .btn-outline-primary { color: var(--primary); border-color: var(--primary); }
     .btn-outline-primary:hover { background-color: var(--primary); color: white; }
     .badge-category { background-color: var(--secondary); color: white; font-size: .75rem; }
+    .auth-card { max-width: 420px; margin: 4rem auto; }
     footer { background-color: var(--secondary); color: rgba(255,255,255,.7); padding: 1.5rem 0; margin-top: 3rem; }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
   <nav class="navbar navbar-expand-lg">
     <div class="container">
       <a class="navbar-brand" href="{{ url_for('index') }}">🍽️ RecipeFinder</a>
@@ -43,16 +34,22 @@
       </button>
       <div class="collapse navbar-collapse" id="navMenu">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('categories') }}">Browse</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('favorites') }}">❤️ Favorites</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('meal_plan') }}">📅 Meal Plan</a></li>
+          {% if current_user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('categories') }}">Browse</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('favorites') }}">❤️ Favorites</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('meal_plan') }}">📅 Meal Plan</a></li>
+            <li class="nav-item"><span class="nav-link text-warning">👤 {{ current_user.username }}</span></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+          {% endif %}
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- Flash messages -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       <div class="container mt-3">
@@ -66,15 +63,13 @@
     {% endif %}
   {% endwith %}
 
-  <!-- Page content -->
   {% block content %}{% endblock %}
 
   <footer>
     <div class="container text-center">
-      <small>Recipe data provided by <a href="https://www.themealdb.com" class="text-warning">TheMealDB</a> (free, open API) &bull; Built with Flask &bull; Hosted on Vercel</small>
+      <small>Recipe data by <a href="https://www.themealdb.com" class="text-warning">TheMealDB</a> &bull; Built with Flask</small>
     </div>
   </footer>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   {% block scripts %}{% endblock %}
 </body>

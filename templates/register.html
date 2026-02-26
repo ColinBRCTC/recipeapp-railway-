@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Register – RecipeFinder{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="auth-card">
+    <div class="card p-4 shadow">
+      <div class="text-center mb-4">
+        <div style="font-size:3rem">🍽️</div>
+        <h3 class="fw-bold mt-2">Create an Account</h3>
+        <p class="text-muted small">Sign up to save your favorite recipes and plan meals</p>
+      </div>
+      <form method="POST" action="{{ url_for('register') }}">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Username</label>
+          <input type="text" name="username" class="form-control form-control-lg"
+                 placeholder="Choose a username (3–30 chars)" required autofocus
+                 minlength="3" maxlength="30" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Password</label>
+          <input type="password" name="password" class="form-control form-control-lg"
+                 placeholder="At least 6 characters" required minlength="6" />
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Confirm Password</label>
+          <input type="password" name="confirm" class="form-control form-control-lg"
+                 placeholder="Repeat your password" required minlength="6" />
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary btn-lg">Create Account</button>
+        </div>
+      </form>
+      <hr class="my-4" />
+      <p class="text-center text-muted mb-0">
+        Already have an account?
+        <a href="{{ url_for('login') }}" class="text-decoration-none fw-semibold">Log in here</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

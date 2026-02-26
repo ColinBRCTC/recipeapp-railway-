@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Recipe Finder & Meal Planner{% endblock %}
+
+{% block content %}
+<!-- Hero Search Section -->
+<section class="search-hero text-center">
+  <div class="container">
+    <h1 class="fw-bold mb-2">Find Your Next Meal</h1>
+    <p class="mb-4 opacity-75">Search thousands of recipes by name or ingredient — completely free</p>
+    <form action="{{ url_for('search') }}" method="GET" class="d-flex justify-content-center gap-2 flex-wrap">
+      <input type="text" name="q" class="form-control form-control-lg"
+             style="max-width:480px" placeholder="e.g. chicken tikka, pasta, sushi..." required />
+      <button type="submit" class="btn btn-primary btn-lg px-4">🔍 Search</button>
+    </form>
+
+    <!-- Ingredient search -->
+    <p class="mt-3 mb-2 opacity-60 small">Or search by ingredient:</p>
+    <form action="{{ url_for('search_by_ingredient') }}" method="GET" class="d-flex justify-content-center gap-2 flex-wrap">
+      <input type="text" name="i" class="form-control"
+             style="max-width:320px" placeholder="e.g. chicken, garlic, lemon..." required />
+      <button type="submit" class="btn btn-outline-light px-3">Search Ingredient</button>
+    </form>
+  </div>
+</section>
+
+<!-- Quick links -->
+<section class="container mt-5">
+  <h2 class="fw-semibold mb-4">Explore by Category</h2>
+  <div class="row g-3">
+    {% set quick_cats = [
+      ('Chicken', '🍗'), ('Seafood', '🦐'), ('Pasta', '🍝'),
+      ('Beef', '🥩'), ('Dessert', '🍰'), ('Vegetarian', '🥗')
+    ] %}
+    {% for cat, emoji in quick_cats %}
+    <div class="col-6 col-md-4 col-lg-2">
+      <a href="{{ url_for('category_meals', category_name=cat) }}" class="text-decoration-none">
+        <div class="card text-center p-3 h-100">
+          <div style="font-size:2.2rem">{{ emoji }}</div>
+          <div class="fw-semibold mt-1 text-dark">{{ cat }}</div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="text-center mt-3">
+    <a href="{{ url_for('categories') }}" class="btn btn-outline-primary">View All Categories →</a>
+  </div>
+</section>
+
+<!-- Features Row -->
+<section class="container mt-5 mb-4">
+  <div class="row g-4 text-center">
+    <div class="col-md-4">
+      <div class="card p-4 h-100">
+        <div style="font-size:2rem">🔍</div>
+        <h5 class="fw-bold mt-2">Search Recipes</h5>
+        <p class="text-muted small">Search by name or ingredient across thousands of international dishes.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-4 h-100">
+        <div style="font-size:2rem">❤️</div>
+        <h5 class="fw-bold mt-2">Save Favorites</h5>
+        <p class="text-muted small">Save recipes you love. Your favorites are stored locally so they're always there.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-4 h-100">
+        <div style="font-size:2rem">📅</div>
+        <h5 class="fw-bold mt-2">Plan Your Week</h5>
+        <p class="text-muted small">Assign meals to each day of the week. Your plan saves automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

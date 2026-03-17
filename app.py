@@ -1,10 +1,8 @@
 """
 app.py – Recipe Finder & Meal Planner (with user authentication)
 Flask web application using TheMealDB free API + Flask-Login.
-Implements: if statements, loops, lists, files, functions, classes/inheritance
-
-Author: [Your Name]
-Course: [Course Name]
+Author: Colin Lewis
+Course: SDE 199
 """
 
 import os
